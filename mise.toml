@@ -1,0 +1,23 @@
+[tools]
+python = "3.14.7"
+typst = "0.15.1"
+
+[tasks.templates]
+description = "安装模板；传入 --list 列出可选模板"
+run = "python scripts/install.py"
+
+[tasks.new]
+description = "使用 typst init 创建工程"
+run = "typst init"
+
+[tasks.compile]
+description = "编译 Typst 文档，传入源文件和输出 PDF 路径"
+run = "typst compile"
+
+[tasks.watch]
+description = "监视并编译 Typst 文档"
+run = "typst watch"
+
+[tasks.python]
+description = "运行 Python 脚本"
+run = "python"

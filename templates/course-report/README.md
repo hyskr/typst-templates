@@ -4,16 +4,21 @@
 
 ## 新建工程
 
-在模板库根目录安装后，通过 Typst 原生命令创建工程：
+在模板库根目录通过 mise 安装并创建工程：
 
 ```sh
-python3 scripts/install.py course-report
-typst init @local/course-report:0.1.0 my-report
-cd my-report
-typst watch main.typ
+mise trust
+mise install
+mise run templates -- course-report
+mise run new -- @local/course-report:0.1.0 ../my-report
+cd ../my-report
+mise trust
+mise run compile
 ```
 
-新工程包含 `main.typ`、`content.typ`、`references.bib` 和 `figures/`。修改 `main.typ` 中的课程信息，在 `content.typ` 撰写正文。
+新工程包含 `main.typ`、`content.typ`、`references.bib`、`figures/` 和 `mise.toml`。修改 `main.typ` 中的课程信息，在 `content.typ` 撰写正文。
+
+`mise run compile` 生成 `report.pdf`，`mise run watch` 持续编译，`mise run python -- script.py` 运行 Python 脚本。工具版本为 Python 3.14.7 与 Typst 0.15.1，复用 mise 的共享安装。
 
 ## 使用接口
 

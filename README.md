@@ -1,6 +1,6 @@
 # Typst Templates
 
-个人 Typst 模板库。每种模板独立存放、安装和选择，使用 Typst 原生的 `@local` 包与 `typst init` 创建新工程。
+个人 Typst 模板库。每种模板独立存放、安装和选择，使用 Typst 原生的 `@local` 包与 `typst init` 创建新工程。Python 与 Typst 版本由 mise 管理，脚本使用 mise 的共享 Python 运行时。
 
 ## 模板目录
 
@@ -12,32 +12,59 @@
 
 ## 本机新建报告
 
-模板库位于 `~/Documents/typst-templates`，在任意课程文件夹运行：
+模板库位于 `~/Documents/typst-templates`：
 
 ```sh
-typst init @local/course-report:0.1.0 my-report
-cd my-report
-typst watch main.typ
+cd ~/Documents/typst-templates
+mise run templates -- course-report
+mise run new -- @local/course-report:0.1.0 ../my-report
+cd ../my-report
+mise trust
+mise run compile
 ```
 
-填写 `main.typ` 中的题目、课程、姓名、学号、摘要与关键词，在 `content.typ` 中撰写正文。图表、参考文献和算法组件的使用示例已包含在工程内。
+填写 `main.typ` 中的题目、课程、姓名、学号、摘要与关键词，在 `content.typ` 中撰写正文。图表、参考文献和算法组件的使用示例已包含在工程内。创建目录也可换成所需课程文件夹的绝对路径。
+
+新工程自带 `mise.toml`，与模板库复用相同的 Python、Typst 版本：
+
+```sh
+mise run compile             # 生成 report.pdf
+mise run watch               # 持续编译
+mise run python -- script.py # 运行脚本
+```
+
+## mise 环境与任务
+
+`mise.toml` 固定 Python 3.14.7 与 Typst 0.15.1。安装工具后，同版本运行时可供各工程共同使用。
+
+模板库根目录提供以下任务，参数通过 `--` 传入：
+
+| 任务 | 示例 | 用途 |
+| --- | --- | --- |
+| `templates` | `mise run templates -- --list` | 列出或安装模板 |
+| `new` | `mise run new -- @local/course-report:0.1.0 ../my-report` | 新建工程 |
+| `compile` | `mise run compile -- path/main.typ path/report.pdf` | 编译指定文档 |
+| `watch` | `mise run watch -- path/main.typ path/report.pdf` | 持续编译指定文档 |
+| `python` | `mise run python -- scripts/install.py --list` | 运行 Python 脚本 |
 
 ## 在其他电脑安装
 
-需要 Typst 0.15 或更高版本，以及 Python 3.11 或更高版本。
+先安装 [mise](https://mise.jdx.dev/getting-started.html)，再执行：
 
 ```sh
 git clone https://github.com/hyskr/typst-templates.git
 cd typst-templates
-python3 scripts/install.py --list
-python3 scripts/install.py course-report
-typst init @local/course-report:0.1.0 my-report
+mise trust
+mise install
+mise run templates -- --list
+mise run templates -- course-report
+mise run new -- @local/course-report:0.1.0 ../my-report
 ```
 
 省略模板名称时安装库内所有模板：
 
 ```sh
-python3 scripts/install.py
+mise run templates
 ```
 
 安装脚本将模板复制到 Typst 本地包目录。macOS 默认路径为 `~/Library/Application Support/typst/packages/local/`，Linux 使用 `$XDG_DATA_HOME/typst/packages/local/` 或 `~/.local/share/typst/packages/local/`，Windows 使用 `%APPDATA%/typst/packages/local/`。已设置 `TYPST_PACKAGE_PATH` 时使用该目录。
@@ -64,9 +91,9 @@ templates/<template-name>/
 在 `typst.toml` 的 `[package]` 中设置 `name`、`version`、`entrypoint`，在 `[template]` 中设置 `path`、`entrypoint`。安装脚本会自动识别该目录。
 
 ```sh
-python3 scripts/install.py --list
-python3 scripts/install.py course-slides
-typst init @local/course-slides:0.1.0 my-slides
+mise run templates -- --list
+mise run templates -- course-slides
+mise run new -- @local/course-slides:0.1.0 ../my-slides
 ```
 
 上述 slide 命令用于新增相应模板后。当前可选模板以 `--list` 的输出为准，各类工程使用各自的包名和版本。
@@ -79,6 +106,7 @@ typst init @local/course-slides:0.1.0 my-slides
 
 ```text
 typst-templates/
+├── mise.toml           # 工具版本与编译、脚本任务
 ├── templates/           # 每个子目录是一种可选模板
 │   └── course-report/
 ├── scripts/install.py  # 列出、安装指定模板
