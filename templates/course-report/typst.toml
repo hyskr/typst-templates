@@ -1,0 +1,16 @@
+[package]
+name = "course-report"
+version = "0.1.0"
+entrypoint = "lib.typ"
+authors = ["hyskr"]
+license = "MIT"
+description = "中文课程汇报与实验报告模板，基于 grape-suite。"
+repository = "https://github.com/hyskr/typst-templates"
+keywords = ["course", "report", "chinese", "template"]
+categories = ["report"]
+compiler = "0.15.0"
+
+[template]
+path = "template"
+entrypoint = "main.typ"
+thumbnail = "thumbnail.png"
